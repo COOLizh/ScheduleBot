@@ -1,7 +1,7 @@
 from bot_handler import BotHandler
 import datetime
 
-token = "722271095:AAFRYrzMKtr_uKKrII9SU0f-srQfT8pE79c"
+token = "826030216:AAEOSvYrw1V5-q4vBbS-h8l81s-jEwz52AE"
 
 queue_bot = BotHandler(token)
 now = datetime.datetime.now()
