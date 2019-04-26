@@ -1,10 +1,12 @@
 import requests
 
+
 class BotHandler:
 
     def __init__(self, token):
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
+
 
     def get_updates(self, offset=None, timeout=30):
         method = 'getUpdates'
@@ -13,11 +15,13 @@ class BotHandler:
         result_json = resp.json()['result']
         return result_json
 
+
     def send_message(self, chat_id, text):
         params = {'chat_id': chat_id, 'text': text}
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
+
 
     def get_last_update(self):
         get_result = self.get_updates()
