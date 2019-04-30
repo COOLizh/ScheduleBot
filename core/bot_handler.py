@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 class BotHandler(object):
@@ -14,8 +15,8 @@ class BotHandler(object):
         result_json = resp.json()['result']
         return result_json
 
-    def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text}
+    def send_message(self, chat_id, text, reply_markup):
+        params = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps(reply_markup)}
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
