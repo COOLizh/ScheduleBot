@@ -25,7 +25,8 @@ def main():
                 schedule_bot.send_message(last_chat_id, 'Incorrect input! Try again 😔', False)
         else:
             last_chat_id = last_update['callback_query']['from']['id']
-            schedule_bot.send_message(last_chat_id, last_update['callback_query']['data'], False)
+            text = last_update['callback_query']['data'] + ' was selected.'
+            schedule_bot.send_popup_message(last_update['callback_query']['id'], text)
 
         new_offset = last_update_id + 1
 

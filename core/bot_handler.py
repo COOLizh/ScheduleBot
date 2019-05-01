@@ -21,6 +21,12 @@ class BotHandler(object):
         resp = requests.post(self.api_url + method, params)
         return resp
 
+    def send_popup_message(self, callback_id, text):
+        params = {'callback_query_id': callback_id, 'text': text, 'show_alert': 'True'}
+        method = 'answerCallbackQuery'
+        resp = requests.post(self.api_url + method, params)
+        return resp
+
     def get_last_update(self):
         get_result = self.get_updates()
         last_update = get_result[-1] if get_result else get_result[len(get_result)]
