@@ -1,6 +1,6 @@
 from core.schedule_bot import ScheduleBot
 import datetime
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from core.keyboards import *
 
 
 def main():
@@ -17,22 +17,11 @@ def main():
         last_update = schedule_bot.get_last_update()
 
         last_update_id = last_update['update_id']
-        last_chat_text = last_update['message']['text']
-        last_chat_id = last_update['message']['chat']['id']
-        last_chat_name = last_update['message']['chat']['username']
+        last_chat_id = last_update['callback_query']['from']['id']
 
-        if last_chat_text == 's':
-            reply_markup = {
-            "inline_keyboard": [
-                [
-                    {"text": "Yes", "url": "http://www.google.com/" , 'callback_data' : '1'},
-                    {"text": "No", "url": "http://www.google.com/"}
-                ]
-            ]
-        }
+        reply_markup = get_transport_keyboard()
 
-            #s = schedule_bot.get_station_schedule('bus')
-            schedule_bot.send_message(last_chat_id, ';)', reply_markup)
+        schedule_bot.send_message(last_chat_id, 'Choose your transport. Last choice: ' + last_update['callback_query']['data'], reply_markup)
 
         new_offset = last_update_id + 1
 
