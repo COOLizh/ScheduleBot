@@ -13,15 +13,19 @@ def main():
 
     while True:
         schedule_bot.get_updates(new_offset)
-
         last_update = schedule_bot.get_last_update()
-
         last_update_id = last_update['update_id']
-        last_chat_id = last_update['callback_query']['from']['id']
 
-        reply_markup = get_transport_keyboard()
-
-        schedule_bot.send_message(last_chat_id, 'Choose your transport. Last choice: ' + last_update['callback_query']['data'], reply_markup)
+        if 'message' in last_update.keys():
+            last_chat_id = last_update['message']['chat']['id']
+            if last_update['message']['text'] == '/start':
+                reply_markup = get_transport_keyboard()
+                schedule_bot.send_message(last_chat_id, 'Choose your transport ⬇', reply_markup)
+            else:
+                schedule_bot.send_message(last_chat_id, 'Incorrect input! Try again 😔', False)
+        else:
+            last_chat_id = last_update['callback_query']['from']['id']
+            schedule_bot.send_message(last_chat_id, last_update['callback_query']['data'], False)
 
         new_offset = last_update_id + 1
 

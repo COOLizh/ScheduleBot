@@ -16,7 +16,7 @@ class BotHandler(object):
         return result_json
 
     def send_message(self, chat_id, text, reply_markup):
-        params = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps(reply_markup)}
+        params = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps(reply_markup)} if reply_markup else {'chat_id': chat_id, 'text': text}
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
