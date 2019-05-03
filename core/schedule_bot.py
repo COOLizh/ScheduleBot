@@ -13,3 +13,8 @@ class ScheduleBot(BotHandler):
         print(request)
         answer = requests.get(request)
         return answer.json()
+
+    def get_stations_codes(self):
+        ru_request = F'https://api.rasp.yandex.net/v3.0/stations_list/?apikey={self.api_key}&lang=ru_RU&format=json'
+        answer = requests.get(ru_request)
+        return answer.json()

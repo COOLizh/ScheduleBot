@@ -1,3 +1,6 @@
+'''This module all kinds of buttons which will be used'''
+
+
 def get_transport_keyboard():
     return {'inline_keyboard': [
             [{'text': '✈ Plane', 'callback_data': 'plane'}],
