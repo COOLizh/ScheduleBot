@@ -10,11 +10,11 @@ class ScheduleBot(BotHandler):
         station = '&station=s9600213'
         transport_type = '&transport_types=bus'
         request += station + transport_type
-        print(request)
         answer = requests.get(request)
         return answer.json()
 
-    def get_stations_codes(self):
-        ru_request = F'https://api.rasp.yandex.net/v3.0/stations_list/?apikey={self.api_key}&lang=ru_RU&format=json'
+    @staticmethod
+    def get_stations_codes():
+        ru_request = F'https://api.rasp.yandex.net/v3.0/stations_list/?apikey=d68a9179-ac0b-40a8-a3da-3f4edb10ac77&lang=ru_RU&format=json'
         answer = requests.get(ru_request)
         return answer.json()
