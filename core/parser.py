@@ -1,0 +1,1 @@
+'''This module parse all JSON or dict elements'''

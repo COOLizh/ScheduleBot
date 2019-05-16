@@ -1,33 +1,40 @@
+'''This module organizes work with a database (add, search, etc.).
+The database consists of all stations throughout Minsk '''
 from pymongo import MongoClient
 from core.schedule_bot import ScheduleBot
 
 
-def create_db():
-    '''This method creates and insert document with station codes'''
+def create_db_codes():
+    '''This function creates and insert document with station codes into the database'''
     client = MongoClient('localhost', 27017)
-    db = client['codes']
-    codes = db.codes
+    database = client['codes']
+    codes = database.codes
     stations_names = []
+
     if 'codes' not in client.list_database_names():
-        # adding all codes of Minsk stations
+        # adding all codes of Minsk stations into the database
         ru_codes = ScheduleBot.get_stations_codes()
         for station in ru_codes['countries'][118]['regions'][5]['settlements'][26]['stations']:
             codes.insert_one(station)
             stations_names.append(station['title'])
+
     return stations_names
 
 
-def find_station_code(search_words):
-    '''This method returns station code by searching text'''
+def find_station_code(search_word):
+    '''This function returns station code by searching text'''
     client = MongoClient('localhost', 27017)
-    db = client['codes']
-    codes = db.codes
+    database = client['codes']
+    codes = database.codes
+
+    stations_names = []
     found_stations = []
+    stations = codes.find({'title': {'$regex': search_word}})
 
-    for word in search_words:
-        stations = codes.find({'title': {'$regex': word}})
-        found_stations.append(stations)
+    for item in stations:
+        if item['title'] not in stations_names:
+            found_stations.append(item)
+            stations_names.append(item['title'])
 
-    for i in found_stations:
-        for j in i:
-            print(j)
+    # stations_names will be useful, when there will be a lot of stations, one of which will be selected by the user
+    return found_stations, stations_names
