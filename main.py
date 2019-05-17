@@ -29,15 +29,15 @@ def main():
             last_update_id = last_update['update_id']
             last_sent_text = last_update['message']['text']
             last_chat_id = last_update['message']['chat']['id']
-            text = 'List of found stations ⬇\n'
+            text = 'List of found stations 📃\n'
 
             stations = schedule_bot.get_station_schedule(last_sent_text)
             count = len(stations)
             reply_markup = get_sc_keyboard(count)
-            print(reply_markup)
 
             for i in range(count):
                 text += str(i + 1) + '. ' + stations[i] + '\n'
+            text += 'Select the station number you need ⬇'
             schedule_bot.send_message(last_chat_id, text, reply_markup)
 
         '''
