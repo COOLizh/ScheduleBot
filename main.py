@@ -17,12 +17,26 @@ def main():
         schedule_bot.get_updates(new_offset)
         last_update = schedule_bot.get_last_update()
         last_update_id = last_update['update_id']
-
         last_sent_text = last_update['message']['text']
         last_chat_id = last_update['message']['chat']['id']
-        if last_sent_text:
+
+        if last_sent_text == '/find':
             schedule_bot.send_message(last_chat_id, 'Enter the name of station.', False)
-            schedule_bot.get_station_schedule(last_sent_text)
+            new_offset = last_update_id + 1
+
+            schedule_bot.get_updates(new_offset)
+            last_update = schedule_bot.get_last_update()
+            last_update_id = last_update['update_id']
+            last_sent_text = last_update['message']['text']
+            last_chat_id = last_update['message']['chat']['id']
+            text = 'List of found stations ⬇\n'
+
+            stations = schedule_bot.get_station_schedule(last_sent_text)
+            print(stations)
+            count = len(stations)
+            for i in range(count):
+                text += str(i + 1) + '. ' + stations[i] + '\n'
+            schedule_bot.send_message(last_chat_id, text, False)
 
         '''
         if 'message' in last_update.keys():

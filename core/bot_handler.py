@@ -27,6 +27,12 @@ class BotHandler(object):
         resp = requests.post(self.api_url + method, params)
         return resp
 
+    def edit_message(self, chat_id, message_id, text):
+        params = {'chat_id': chat_id, 'message_id': message_id, 'text': text}
+        method = 'editMessageText'
+        resp = requests.post(self.api_url + method, params)
+        return resp
+
     def get_last_update(self):
         get_result = self.get_updates()
         last_update = get_result[-1] if get_result else get_result[len(get_result)]
