@@ -32,11 +32,13 @@ def main():
             text = 'List of found stations ⬇\n'
 
             stations = schedule_bot.get_station_schedule(last_sent_text)
-            print(stations)
             count = len(stations)
+            reply_markup = get_sc_keyboard(count)
+            print(reply_markup)
+
             for i in range(count):
                 text += str(i + 1) + '. ' + stations[i] + '\n'
-            schedule_bot.send_message(last_chat_id, text, False)
+            schedule_bot.send_message(last_chat_id, text, reply_markup)
 
         '''
         if 'message' in last_update.keys():
