@@ -31,9 +31,9 @@ def main():
             last_chat_id = last_update['message']['chat']['id']
             text = 'List of found stations 📃\n'
 
-            stations = schedule_bot.get_station_schedule(last_sent_text)
+            stations, codes = schedule_bot.get_station_schedule(last_sent_text)
             count = len(stations)
-            reply_markup = get_sc_keyboard(count)
+            reply_markup = get_sc_keyboard(count, codes)
 
             for i in range(count):
                 text += str(i + 1) + '. ' + stations[i] + '\n'

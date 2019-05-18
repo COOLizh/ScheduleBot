@@ -28,14 +28,14 @@ def find_station_code(search_word):
     codes = database.codes
 
     stations_names = []
-    found_stations = []
+    found_codes = []
     stations = codes.find({'title': {'$regex': search_word}})
 
     for item in stations:
         if item['title'] not in stations_names:
-            found_stations.append(item)
+            found_codes.append(item['codes']['yandex_code'])
             stations_names.append(item['title'])
 
     # found_stations закинуть в бд
     # stations_names will be useful, when there will be a lot of stations, one of which will be selected by the user
-    return stations_names
+    return stations_names, found_codes

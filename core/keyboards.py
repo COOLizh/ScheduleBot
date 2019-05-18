@@ -1,20 +1,21 @@
 '''This module all kinds of buttons which will be used'''
 
 
-def get_sc_keyboard(count):
+def get_sc_keyboard(count, codes):
     '''This functions returns station choice of user'''
+    #разобраться с этим говнокодом, callback_data сделать код станции
     if count <= 5:
-        keyboard = {'inline_keyboard': [[{'text': f'{i + 1}', 'callback_data': f'{i}'} for i in range(count)]]}
+        keyboard = {'inline_keyboard': [[{'text': f'{i + 1}', 'callback_data': f'{codes[i]}'} for i in range(count)]]}
         return keyboard
     else:
         num = count // 5
         ost = count % 5
         ch = 6
-        keyboard = {'inline_keyboard': [[{'text': f'{i + 1}', 'callback_data': f'{i}'} for i in range(5)]]}
+        keyboard = {'inline_keyboard': [[{'text': f'{i + 1}', 'callback_data': f'{codes[i]}'} for i in range(5)]]}
         for i in range(num - 1):
-            keyboard['inline_keyboard'].append([{'text': f'{ch + i}', 'callback_data': f'{ch + i - 1}'} for i in range(5)])
+            keyboard['inline_keyboard'].append([{'text': f'{ch + i}', 'callback_data': f'{codes[ch + i - 1]}'} for i in range(5)])
             ch += 5
-        keyboard['inline_keyboard'].append([{'text': f'{ch + i}', 'callback_data': f'{ch + i - 1}'} for i in range(ost)])
+        keyboard['inline_keyboard'].append([{'text': f'{ch + i}', 'callback_data': f'{codes[ch + i - 1]}'} for i in range(ost)])
         return keyboard
 
 
