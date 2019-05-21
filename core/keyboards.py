@@ -3,7 +3,6 @@
 
 def get_sc_keyboard(count, codes):
     '''This functions returns station choice of user'''
-    #разобраться с этим говнокодом, callback_data сделать код станции
     if count <= 5:
         keyboard = {'inline_keyboard': [[{'text': f'{i + 1}', 'callback_data': f'{codes[i]}'} for i in range(count)]]}
         return keyboard
