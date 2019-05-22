@@ -1,6 +1,13 @@
 '''This module all kinds of buttons which will be used'''
 
 
+def get_methods_keyboard():
+    '''This method returns keyboard which will help to choose method in bot'''
+    return {'keyboard': [
+        [{'text': 'Schedule on station 🚏','callback_data': 'on'}],
+        [{'text': 'Schedule behind stations 🚏 ➡ 🚏', 'callback_data': 'behind'}]]}
+
+
 def get_sc_keyboard(count, codes):
     '''This functions returns station choice of user'''
     if count <= 5:

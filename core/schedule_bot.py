@@ -15,11 +15,13 @@ class ScheduleBot(BotHandler):
         return f'{now.year}-{month}-{day}'
 
     def get_station_schedule(self, key):
+        #осталось распарсить структуру ответа на запрос
         station = 'station=' + key + '&'
         date = 'date=' + self.get_datetime()
         request = self.yandex_api_url + station + date
+        print(request)
         answer = requests.get(request)
-        print(answer.json())
+        answer = answer.json()
 
     def find_stations(self, search_text):
         return mongo.find_station_code(search_text)

@@ -18,7 +18,12 @@ def main():
             last_sent_text = last_update['message']['text']
             last_chat_id = last_update['message']['chat']['id']
 
-            if last_sent_text == '/find':
+            if last_sent_text == '/start':
+                reply_markup = get_methods_keyboard()
+                schedule_bot.send_message(last_chat_id, 'Choose method in your keyboard.', reply_markup)
+                new_offset = last_update_id + 1
+
+            elif last_sent_text == '/find':
                 schedule_bot.send_message(last_chat_id, 'Enter the name of station.', False)
                 new_offset = last_update_id + 1
 

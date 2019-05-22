@@ -36,6 +36,5 @@ def find_station_code(search_word):
             found_codes.append(item['codes']['yandex_code'])
             stations_names.append(item['title'])
 
-    # found_stations закинуть в бд
     # stations_names will be useful, when there will be a lot of stations, one of which will be selected by the user
     return stations_names, found_codes
