@@ -36,11 +36,13 @@ def get_schedule(schedule_bot, last_chat_id, last_update_id, method):
 
         if count == 0:
             text = 'No station found ☹'
+            schedule_bot.send_message(last_chat_id, text, False)
+            return
         else:
             for i in range(count):
                 text += str(i + 1) + '. ' + stations[i] + '\n'
             text += 'Select the station number you need ⬇'
-        schedule_bot.send_message(last_chat_id, text, reply_markup)
+            schedule_bot.send_message(last_chat_id, text, reply_markup)
 
         # searching by station
         new_offset = last_update_id + 1
@@ -53,6 +55,7 @@ def get_schedule(schedule_bot, last_chat_id, last_update_id, method):
 
     if method == 'Schedule on station 🚏':
         schedule_bot.send_message(last_chat_id, schedule_bot.get_station_schedule(key), False)
+
 
 def main():
     token = '826030216:AAEOSvYrw1V5-q4vBbS-h8l81s-jEwz52AE'
@@ -69,7 +72,7 @@ def main():
             new_offset = last_update_id + 1
 
         elif last_sent_text != 'Schedule on station 🚏' and last_sent_text != 'Schedule behind stations 🚏 ➡️ 🚏':
-            schedule_bot.send_message(last_chat_id, 'Incorret input! Choose the method in keyboard ❗', False)
+            schedule_bot.send_message(last_chat_id, 'Incorret input ‼ Choose the method in keyboard ‼', False)
             new_offset = last_update_id + 1
 
         # depening on method start this method
