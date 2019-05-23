@@ -23,8 +23,8 @@ def main():
                 schedule_bot.send_message(last_chat_id, 'Choose method in your keyboard.', reply_markup)
                 new_offset = last_update_id + 1
 
-            elif last_sent_text == '/find':
-                schedule_bot.send_message(last_chat_id, 'Enter the name of station.', False)
+            elif last_sent_text == 'Schedule on station 🚏':
+                schedule_bot.send_message(last_chat_id, 'Enter the name of station ✏', False)
                 new_offset = last_update_id + 1
 
                 schedule_bot.get_updates(new_offset)
@@ -48,7 +48,7 @@ def main():
             last_chat_id = last_update['callback_query']['from']['id']
             last_update_id = last_update['update_id']
             key = last_update['callback_query']['data']
-            schedule_bot.get_station_schedule(key)
+            schedule_bot.send_message(last_chat_id, schedule_bot.get_station_schedule(key), False)
             new_offset = last_update_id + 1
 
         '''
