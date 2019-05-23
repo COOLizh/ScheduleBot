@@ -38,9 +38,12 @@ def main():
                 count = len(stations)
                 reply_markup = get_sc_keyboard(count, codes)
 
-                for i in range(count):
-                    text += str(i + 1) + '. ' + stations[i] + '\n'
-                text += 'Select the station number you need ⬇'
+                if count == 0:
+                    text = 'No station found ☹'
+                else:
+                    for i in range(count):
+                        text += str(i + 1) + '. ' + stations[i] + '\n'
+                    text += 'Select the station number you need ⬇'
                 schedule_bot.send_message(last_chat_id, text, reply_markup)
         else:
             # поиск по станции
@@ -48,6 +51,7 @@ def main():
             last_chat_id = last_update['callback_query']['from']['id']
             last_update_id = last_update['update_id']
             key = last_update['callback_query']['data']
+            print(key)
             schedule_bot.send_message(last_chat_id, schedule_bot.get_station_schedule(key), False)
             new_offset = last_update_id + 1
 

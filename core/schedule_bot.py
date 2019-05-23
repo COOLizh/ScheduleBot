@@ -14,19 +14,21 @@ class ScheduleBot(BotHandler):
         day = '0' + str(now.day) if len(str(now.day)) == 1 else str(now.day)
         return f'{now.year}-{month}-{day}'
 
-    def get_routes_inf(self, answer):
+    def get_routes_inf(self, answer, limit):
         # taking all needful information about routes
         transport_types = {'bus' : '🚌 ',
                           'plane': '✈️ ',
                           'train': '🚅 ',
                           'suburban': '🚆 '}
         now = datetime.datetime.now()
-        routes = ''
+        routes = 'The nearest routes 📋\n'
         index = -1
         count = 0
         while count < 10:
             text = ''
             index += 1
+            if index == limit:
+                break
             time = str(answer['schedule'][index]['departure'])
             time = time[11:16]
             if str(now.hour) > time[:2] or (str(now.hour) <= time[:2] and str(now.minute) > time[3:5]):
@@ -37,6 +39,8 @@ class ScheduleBot(BotHandler):
                 text += ' ⌚ — ' + time + '\n'
                 routes += text
                 count += 1
+        if routes == 'The nearest routes 📋\n':
+            routes = 'Today there are no routes ☹'
         return routes
 
     def get_station_schedule(self, key):
@@ -45,11 +49,13 @@ class ScheduleBot(BotHandler):
         request = self.yandex_api_url + station + date
         answer = requests.get(request)
         answer = answer.json()
-        request += '&limit=' + str(answer['pagination']['total'])
+        if 'error' in answer:
+            return 'It seems that there is no such station anymore ☹'
+        limit = answer['pagination']['total']
+        request += '&limit=' + str(limit)
         answer = requests.get(request)
         answer = answer.json()
-        return self.get_routes_inf(answer)
-
+        return self.get_routes_inf(answer, limit)
 
     def find_stations(self, search_text):
         return mongo.find_station_code(search_text)
