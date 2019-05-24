@@ -6,7 +6,6 @@ import datetime
 
 class ScheduleBot(BotHandler):
     yandex_api_key = 'd68a9179-ac0b-40a8-a3da-3f4edb10ac77'
-    yandex_api_url = f'https://api.rasp.yandex.net/v3.0/schedule/?apikey={yandex_api_key}&'
 
     def get_datetime(self):
         now = datetime.datetime.now()
@@ -44,15 +43,16 @@ class ScheduleBot(BotHandler):
         return routes
 
     def get_station_schedule(self, key):
+        yandex_api_url = f'https://api.rasp.yandex.net/v3.0/schedule/?apikey={self.yandex_api_key}&'
         print(key)
         station = 'station=' + key + '&'
         date = 'date=' + self.get_datetime()
-        request = self.yandex_api_url + station + date
+        request = yandex_api_url + station + date
         answer = requests.get(request)
         answer = answer.json()
         print(request)
         if 'error' in answer:
-            return 'It seems that there is no such station anymore ☹'
+            return 'This station is on development ☹'
         limit = answer['pagination']['total']
         request += '&limit=' + str(limit)
         answer = requests.get(request)
@@ -60,10 +60,11 @@ class ScheduleBot(BotHandler):
         return self.get_routes_inf(answer, limit)
 
     def get_stations_schedule(self, key1, key2):
+        yandex_api_url = f'https://api.rasp.yandex.net/v3.0/search/?apikey={self.yandex_api_key}&'
         station1 = 'from=' + key1 + '&'
         station2 = 'to=' + key2 + '&'
         date = 'date=' + self.get_datetime()
-        request = self.yandex_api_url + station1 + station2 + date
+        request = yandex_api_url + station1 + station2 + date
         print(request)
 
     def find_stations(self, search_text):

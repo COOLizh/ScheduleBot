@@ -19,13 +19,6 @@ def create_db_codes():
             for settlements in ru_codes['countries'][118]['regions'][region]['settlements']:
                 for station in settlements['stations']:
                     codes.insert_one(station)
-        '''
-        for station in ru_codes['countries'][118]['regions'][5]['settlements'][26]['stations']:
-            codes.insert_one(station)
-            stations_names.append(station['title'])
-            '''
-
-    return stations_names
 
 
 def find_station_code(search_word):
