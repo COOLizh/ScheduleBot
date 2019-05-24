@@ -14,9 +14,11 @@ def create_db_codes():
     if 'codes' not in client.list_database_names():
         # adding all codes of Minsk stations into the database
         ru_codes = ScheduleBot.get_stations_codes()
-        for station in ru_codes['countries'][118]['regions'][5]['settlements'][26]['stations']:
-            codes.insert_one(station)
-            stations_names.append(station['title'])
+
+        for region in range(7):
+            for settl in ru_codes['countries'][118]['regions'][region]['settlements']:
+                for station in settl['stations']:
+                    codes.insert_one(station)
 
     return stations_names
 

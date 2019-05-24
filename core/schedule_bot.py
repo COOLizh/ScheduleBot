@@ -44,11 +44,13 @@ class ScheduleBot(BotHandler):
         return routes
 
     def get_station_schedule(self, key):
+        print(key)
         station = 'station=' + key + '&'
         date = 'date=' + self.get_datetime()
         request = self.yandex_api_url + station + date
         answer = requests.get(request)
         answer = answer.json()
+        print(request)
         if 'error' in answer:
             return 'It seems that there is no such station anymore ☹'
         limit = answer['pagination']['total']
@@ -56,6 +58,13 @@ class ScheduleBot(BotHandler):
         answer = requests.get(request)
         answer = answer.json()
         return self.get_routes_inf(answer, limit)
+
+    def get_stations_schedule(self, key1, key2):
+        station1 = 'from=' + key1 + '&'
+        station2 = 'to=' + key2 + '&'
+        date = 'date=' + self.get_datetime()
+        request = self.yandex_api_url + station1 + station2 + date
+        print(request)
 
     def find_stations(self, search_text):
         return mongo.find_station_code(search_text)

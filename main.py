@@ -22,7 +22,6 @@ def update(schedule_bot, new_offset):
 def get_schedule(schedule_bot, last_chat_id, last_update_id, method):
     '''This function send to user schedule on station'''
     exit = True if method == 'Schedule on station 🚏' else False
-
     while True:
         schedule_bot.send_message(last_chat_id, 'Enter the name of station ✏', False)
 
@@ -55,6 +54,8 @@ def get_schedule(schedule_bot, last_chat_id, last_update_id, method):
 
     if method == 'Schedule on station 🚏':
         schedule_bot.send_message(last_chat_id, schedule_bot.get_station_schedule(key), False)
+    else:
+        schedule_bot.get_stations_schedule(first_key, key)
 
 
 def main():
@@ -71,13 +72,13 @@ def main():
             schedule_bot.send_message(last_chat_id, 'Choose method in your keyboard.', reply_markup)
             new_offset = last_update_id + 1
 
-        elif last_sent_text != 'Schedule on station 🚏' and last_sent_text != 'Schedule behind stations 🚏 ➡️ 🚏':
-            schedule_bot.send_message(last_chat_id, 'Incorret input ‼ Choose the method in keyboard ‼', False)
+        # depening on method start this method
+        elif last_sent_text == 'Schedule on station 🚏' or last_sent_text == 'Schedule behind stations 🚏 ➡ 🚏':
+            get_schedule(schedule_bot, last_chat_id, last_update_id, last_sent_text)
             new_offset = last_update_id + 1
 
-        # depening on method start this method
         else:
-            get_schedule(schedule_bot, last_chat_id, last_update_id, last_sent_text)
+            schedule_bot.send_message(last_chat_id, 'Incorret input ‼ Choose the method in keyboard ‼', False)
             new_offset = last_update_id + 1
 
 
