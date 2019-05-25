@@ -1,9 +1,11 @@
+'''The main module of project'''
 import core.mongodb as mongo
 from handlers.schedule_bot import ScheduleBot
 from core.keyboards import *
 
 
 def update(schedule_bot, new_offset):
+    '''This method checks new updates in bot and return needful variables'''
     schedule_bot.get_updates(new_offset)
     last_update = schedule_bot.get_last_update()
     if 'message' in last_update.keys():

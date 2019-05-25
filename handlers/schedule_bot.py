@@ -1,3 +1,4 @@
+'''This module provides all functionality of schedule bot'''
 from handlers.bot_handler import BotHandler
 import core.mongodb as mongo
 import requests
@@ -5,16 +6,18 @@ import datetime
 
 
 class ScheduleBot(BotHandler):
+
     yandex_api_key = 'd68a9179-ac0b-40a8-a3da-3f4edb10ac77'
 
     def get_datetime(self):
+        '''Parse and returns fully datetime for fresh routes'''
         now = datetime.datetime.now()
         month = '0' + str(now.month) if len(str(now.month)) == 1 else str(now.month)
         day = '0' + str(now.day) if len(str(now.day)) == 1 else str(now.day)
         return f'{now.year}-{month}-{day}'
 
     def get_routes_inf(self, answer, limit, column):
-        # taking all needful information about routes
+        '''Taking all needful information about routes'''
         transport_types = {'bus' : '🚌 ',
                           'plane': '✈️ ',
                           'train': '🚅 ',
@@ -23,6 +26,7 @@ class ScheduleBot(BotHandler):
         routes = 'The nearest routes 📋\n'
         index = -1
         count = 0
+        # if there are a lot of routes, returns near 10 routes, else returns all routes
         while count < 10:
             text = ''
             index += 1
@@ -46,16 +50,20 @@ class ScheduleBot(BotHandler):
         return routes
 
     def get_station_schedule(self, key):
+        '''Returns string which consists of all fresh routes'''
+        # all variables which will need for request
         yandex_api_url = f'https://api.rasp.yandex.net/v3.0/schedule/?apikey={self.yandex_api_key}&'
-        print(key)
         station = 'station=' + key + '&'
         date = 'date=' + self.get_datetime()
         request = yandex_api_url + station + date
         answer = requests.get(request)
         answer = answer.json()
         print(request)
+
         if 'error' in answer:
             return 'This station is on development ☹'
+
+        # if there are no error in answer posting new request, answer of what will consists of all today routes
         limit = answer['pagination']['total']
         request += '&limit=' + str(limit)
         print(request)
@@ -64,6 +72,8 @@ class ScheduleBot(BotHandler):
         return self.get_routes_inf(answer, limit, 'schedule')
 
     def get_stations_schedule(self, key1, key2):
+        '''Returns string which consists of all fresh routes'''
+        # all variables which will need for request
         yandex_api_url = f'https://api.rasp.yandex.net/v3.0/search/?apikey={self.yandex_api_key}&'
         station1 = 'from=' + key1 + '&'
         station2 = 'to=' + key2 + '&'
@@ -72,8 +82,10 @@ class ScheduleBot(BotHandler):
         print(request)
         answer = requests.get(request)
         answer = answer.json()
+
         if 'error' in answer:
             return 'This route is on development ☹'
+        # if there are no error in answer posting new request, answer of what will consists of all today routes
         limit = answer['pagination']['total']
         request += '&limit=' + str(limit)
         print(request)
@@ -82,10 +94,12 @@ class ScheduleBot(BotHandler):
         return self.get_routes_inf(answer, limit, 'segments')
 
     def find_stations(self, search_text):
+        '''Find station by searching text'''
         return mongo.find_station_code(search_text)
 
     @staticmethod
     def get_stations_codes():
+        '''Returns all codes of stations in Belarus'''
         ru_request = F'https://api.rasp.yandex.net/v3.0/stations_list/?apikey=d68a9179-ac0b-40a8-a3da-3f4edb10ac77&lang=ru_RU&format=json'
         answer = requests.get(ru_request)
         return answer.json()
