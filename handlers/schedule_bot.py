@@ -1,4 +1,4 @@
-from core.bot_handler import BotHandler
+from handlers.bot_handler import BotHandler
 import core.mongodb as mongo
 import requests
 import datetime
@@ -13,7 +13,7 @@ class ScheduleBot(BotHandler):
         day = '0' + str(now.day) if len(str(now.day)) == 1 else str(now.day)
         return f'{now.year}-{month}-{day}'
 
-    def get_routes_inf(self, answer, limit):
+    def get_routes_inf(self, answer, limit, column):
         # taking all needful information about routes
         transport_types = {'bus' : '🚌 ',
                           'plane': '✈️ ',
@@ -28,13 +28,16 @@ class ScheduleBot(BotHandler):
             index += 1
             if index == limit:
                 break
-            time = str(answer['schedule'][index]['departure'])
+            time = str(answer[column][index]['departure'])
             time = time[11:16]
-            if str(now.hour) > time[:2] or (str(now.hour) <= time[:2] and str(now.minute) > time[3:5]):
+            hour = '0' + str(now.hour) if len(str(now.hour)) == 1 else str(now.hour)
+            minute = '0' + str(now.minute) if len(str(now.minute)) == 1 else str(now.minute)
+            if hour > time[:2] or (hour == time[:2] and minute > time[3:5]):
+                print(now.hour, now.minute, ' - ', time[:2], time[3:5])
                 continue
             else:
-                text += transport_types[answer['schedule'][index]['thread']['transport_type']]
-                text += '№' + answer['schedule'][index]['thread']['number'] + ' ' + answer['schedule'][index]['thread']['short_title']
+                text += transport_types[answer[column][index]['thread']['transport_type']]
+                text += '№' + answer[column][index]['thread']['number'] + ' ' + answer[column][index]['thread']['short_title']
                 text += ' ⌚ — ' + time + '\n'
                 routes += text
                 count += 1
@@ -55,9 +58,10 @@ class ScheduleBot(BotHandler):
             return 'This station is on development ☹'
         limit = answer['pagination']['total']
         request += '&limit=' + str(limit)
+        print(request)
         answer = requests.get(request)
         answer = answer.json()
-        return self.get_routes_inf(answer, limit)
+        return self.get_routes_inf(answer, limit, 'schedule')
 
     def get_stations_schedule(self, key1, key2):
         yandex_api_url = f'https://api.rasp.yandex.net/v3.0/search/?apikey={self.yandex_api_key}&'
@@ -66,6 +70,16 @@ class ScheduleBot(BotHandler):
         date = 'date=' + self.get_datetime()
         request = yandex_api_url + station1 + station2 + date
         print(request)
+        answer = requests.get(request)
+        answer = answer.json()
+        if 'error' in answer:
+            return 'This route is on development ☹'
+        limit = answer['pagination']['total']
+        request += '&limit=' + str(limit)
+        print(request)
+        answer = requests.get(request)
+        answer = answer.json()
+        return self.get_routes_inf(answer, limit, 'segments')
 
     def find_stations(self, search_text):
         return mongo.find_station_code(search_text)

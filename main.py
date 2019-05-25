@@ -1,5 +1,5 @@
 import core.mongodb as mongo
-from core.schedule_bot import ScheduleBot
+from handlers.schedule_bot import ScheduleBot
 from core.keyboards import *
 
 
@@ -55,7 +55,7 @@ def get_schedule(schedule_bot, last_chat_id, last_update_id, method):
     if method == 'Schedule on station 🚏':
         schedule_bot.send_message(last_chat_id, schedule_bot.get_station_schedule(key), False)
     else:
-        schedule_bot.get_stations_schedule(first_key, key)
+        schedule_bot.send_message(last_chat_id, schedule_bot.get_stations_schedule(first_key, key), False)
 
 
 def main():

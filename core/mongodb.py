@@ -1,7 +1,7 @@
 '''This module organizes work with a database (add, search, etc.).
 The database consists of all stations throughout Minsk '''
 from pymongo import MongoClient
-from core.schedule_bot import ScheduleBot
+from handlers.schedule_bot import ScheduleBot
 
 
 def create_db_codes():
